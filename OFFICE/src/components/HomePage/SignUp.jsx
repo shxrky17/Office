@@ -30,8 +30,9 @@ export default function SignUp() {
     }
     return (
         <>
-            <section className="bg-gray-50 h-[100vh] relative  dark:bg-gray-900">
-                <div className="w-[100%] flex justify-center items-center h-[100%] ">
+            <section className="bg-gray-50 h-[100vh]  relative  dark:bg-gray-900">
+                <img className='h-full w-full object-cover blur-xs' src="src\assets\snow.jpg"/>
+                <div className="w-[100%]  absolute inset-0 flex justify-center items-center h-[100%] ">
                     <div class="border border-white p-5 bg-gray-800">
                             <h1  class="py-10 text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
                                 Create an account

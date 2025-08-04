@@ -1,7 +1,11 @@
 import React from 'react'
 import './HomePage.css'
+import Navbar from './Navbar'
+
+
 function HomePage() {
-    return (
+    return (<>
+    <Navbar/>
         <div className='w-[100%] flex h-[100vh]'>
             <div className='w-[60%] h-[70%] bg-amber-50'>
                 <img className='' src='src\assets\Office-design-trends-13-1536x1024.jpg'></img>
@@ -19,6 +23,7 @@ function HomePage() {
             </div>
 
         </div>
+        </>
     )
 }
 

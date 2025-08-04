@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 function Login() {
   const [formData, setFormData] = useState({
     email: '',
     password: ''
   });
-
+  const navigate = useNavigate();
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -18,8 +19,10 @@ function Login() {
         formData,
 
       );
-      alert('User login successfully');
+
       console.log(res.data);
+      navigate('/employee');
+      window.location.reload();
     } catch (err) {
       console.error('Error login user:', err);
       alert('Failed to login user');
@@ -28,15 +31,16 @@ function Login() {
   };
 
   return (
-    <section className="bg-gray-50 h-[100vh] relative  dark:bg-gray-900">
-      <div className="w-[100%] flex justify-center items-center h-[100%] ">
-        <div class="border border-white p-5 bg-gray-800">
+    <section className="bg-gray-50 relative h-[100vh]   dark:bg-gray-900">
+      <img className='h-full w-full object-cover blur-xs' src="src\assets\snow.jpg"/>
+      <div className="w-[100%] absolute inset-0 flex justify-center items-center h-[100%] ">
+        <div class="border  border-white p-5 bg-gray-800">
           <h1 class="py-10 text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
             Login to your account
           </h1>
           <form onSubmit={handleSubmit} class="space-y-4 md:space-y-6" action="#">
 
-            <div className='flex gap-10'>
+            <div className=' flex gap-10'>
               <div>
                 <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your email</label>
                 <input value={formData.email} onChange={handleChange} type="email" name="email" id="email" class="bg-gray-50 border p-1 border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="name@company.com" required="" />
