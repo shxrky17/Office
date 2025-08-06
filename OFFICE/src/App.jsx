@@ -8,12 +8,14 @@ import HomePagee from './components/Pages/HomePagee'
 import {BrowserRouter as Router, Routes ,Route } from 'react-router-dom'
 import Login from './components/HomePage/Login'
 import EmployeePage from './components/Pages/EmployeePage'
+import EHomePage from './components/EmployeePage/EHomePage'
 
 function App() {
  
 
   return (
     <>
+   
     <HomePagee/>
       <EmployeePage/>
  
