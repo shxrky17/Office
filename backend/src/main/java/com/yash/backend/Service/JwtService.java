@@ -8,9 +8,7 @@ import io.jsonwebtoken.security.Keys;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
-import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
@@ -20,19 +18,9 @@ import java.util.function.Function;
 @Service
 public class JwtService {
 
-
-    private String secretkey = "11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111";
-
-    public JwtService() {
-
-        try {
-            KeyGenerator keyGen = KeyGenerator.getInstance("HmacSHA256");
-            SecretKey sk = keyGen.generateKey();
-            secretkey = Base64.getEncoder().encodeToString(sk.getEncoded());
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        }
-    }
+    // DO NOT regenerate this on every run
+    // Must be a fixed Base64-encoded 256-bit (32-byte) secret key
+    private final String secretKey = "bXl2ZXJ5c2VjdXJlc2VjcmV0a2V5Zm9yand0YXV0aGVudGljYXRpb24=";
 
     public String generateToken(String username) {
         Map<String, Object> claims = new HashMap<>();
@@ -45,20 +33,18 @@ public class JwtService {
                 .compact();
     }
 
-
     private SecretKey getKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(secretkey);
+        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
     public String extractUserName(String token) {
-        // extract the username from jwt token
         return extractClaim(token, Claims::getSubject);
     }
 
-    private <T> T extractClaim(String token, Function<Claims, T> claimResolver) {
+    private <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
-        return claimResolver.apply(claims);
+        return claimsResolver.apply(claims);
     }
 
     private Claims extractAllClaims(String token) {
@@ -70,10 +56,9 @@ public class JwtService {
                 .getBody();
     }
 
-
     public boolean validateToken(String token, UserDetails userDetails) {
-        final String userName = extractUserName(token);
-        return (userName.equals(userDetails.getUsername()) && !isTokenExpired(token));
+        final String username = extractUserName(token);
+        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 
     private boolean isTokenExpired(String token) {
@@ -83,5 +68,4 @@ public class JwtService {
     private Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
     }
-
 }
