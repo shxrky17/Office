@@ -30,10 +30,11 @@ function Login() {
         const data = await response.json();
         localStorage.setItem('email', formData.email);
         localStorage.setItem('token', data.jwt); // save token
-        alert(data.message); // optional
+        
 
         // ✅ Redirect to employee page
         navigate('/employee');
+        window.location.reload();
       } else {
         const error = await response.json();
         alert(error.message || 'Login failed! Check credentials.');

@@ -12,7 +12,7 @@ function EmployeePage() {
   <Router>
       
       <Routes>
-        <Route path="/" element={<HomePage />} />
+        
         <Route path="/employee" element={<EHomePage />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/login" element={<Login />} />
