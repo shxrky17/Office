@@ -1,57 +1,41 @@
 package com.yash.backend.Service;
 
-import com.yash.backend.DTO.LoginRequest;
-import com.yash.backend.DTO.SignupRequest;
 import com.yash.backend.Model.User;
 import com.yash.backend.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 public class UserService {
 
     @Autowired
-    private UserRepository userRepository;
+    private JwtService jwtService;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    AuthenticationManager authManager;
 
-    public String signup(SignupRequest signupRequest) {
-        if (userRepository.existsByEmail(signupRequest.getEmail())) {
-            return "User with this email already exists";
-        }
+    @Autowired
+    private UserRepository repo;
 
-        if (userRepository.existsByUserName(signupRequest.getUserName())) {
-            return "User with this username already exists";
-        }
 
-        User user = new User();
-        user.setFirstName(signupRequest.getFirstName());
-        user.setLastName(signupRequest.getLastName());
-        user.setEmail(signupRequest.getEmail());
-        user.setPassword(passwordEncoder.encode(signupRequest.getPassword()));
-        user.setPhoneNumber(signupRequest.getPhoneNumber());
-        user.setUserName(signupRequest.getUserName());
+    private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
 
-        userRepository.save(user);
-        return "Signup successful";
+    public User register(User user) {
+        user.setPassword(encoder.encode(user.getPassword()));
+        repo.save(user);
+        return user;
     }
 
-    public String login(LoginRequest loginRequest) {
-        Optional<User> optionalUser = userRepository.findByEmail(loginRequest.getEmail());
-
-        if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
-            if (passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
-                return "Login successful";
-            } else {
-                return "Invalid password";
-            }
+    public String verify(User user) {
+        Authentication authentication = authManager.authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
+        if (authentication.isAuthenticated()) {
+            return jwtService.generateToken(user.getEmail());
         } else {
-            return "Invalid email";
+            return "fail";
         }
     }
 }

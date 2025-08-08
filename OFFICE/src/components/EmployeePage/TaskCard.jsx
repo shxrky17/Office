@@ -1,6 +1,10 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 
 function TaskCard({ title, status, time, date }) {
+  
+  
   return (
     <div className="flex justify-center items-center ">
       <div className=" h-[140px] w-[1100px] flex  shadow rounded-lg mt-10">
